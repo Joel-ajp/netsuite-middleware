@@ -9,20 +9,8 @@ import (
 	"os/exec"
 )
 
-func post_test(w http.ResponseWriter, r *http.Request) {
-	// Create post end point
-	if r.Method != http.MethodPost {
-		http.Error(w, "invalid request method", http.StatusMethodNotAllowed)
-		return
-	}
-
-	body, err := io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "Error reading request body", http.StatusInternalServerError)
-		return
-	}
-
-	fmt.Fprintf(w, "Post request received: %s", body)
+func create_folder(data map[string]interface{}) {
+	return
 }
 
 func post_to_server(w http.ResponseWriter, r *http.Request) {
@@ -47,13 +35,31 @@ func post_to_server(w http.ResponseWriter, r *http.Request) {
 
 	clientName, clientNameExists := jsonData["client"]
 	projectName, projectNameExists := jsonData["project"]
+	subsidiary, subsidiaryExists := jsonData["subsidiary"]
+	formType, formTypeExists := jsonData["form_type"]
 
-	if !clientNameExists || !projectNameExists {
-		http.Error(w, "client or project name not found", http.StatusBadRequest)
+	if !clientNameExists || !projectNameExists || !subsidiaryExists || !formTypeExists {
+		var missing string = ""
+
+		if !clientNameExists {
+			missing += "client "
+		}
+		if !projectNameExists {
+			missing += "project "
+		}
+		if !subsidiaryExists {
+			missing += "subsidiary "
+		}
+		if !formTypeExists {
+			missing += "form_type "
+		}
+
+		http.Error(w, fmt.Sprintf("Missing the following json fields: %s", missing), http.StatusBadRequest)
 		return
 	}
 
-	fmt.Fprintf(w, "Client name: %s\n Project name: %s", clientName, projectName)
+	fmt.Fprintf(w, "Client name:%s,Project name:%s,Subsidiary:%s,Form Type:%s", clientName, projectName, subsidiary, formType)
+	// Create folder on the server
 }
 
 func main() {
@@ -67,7 +73,6 @@ func main() {
 		fmt.Fprintf(w, "files: %s", out)
 	})
 
-	http.HandleFunc("/post_test", post_test)
 	http.HandleFunc("/post", post_to_server)
 
 	log.Printf("Server started %s", port)
