@@ -74,7 +74,8 @@ func create_folder(jsondata map[string]interface{}) (string, error) {
 		return "", fmt.Errorf("Error creating folder: %s Output: %s", err, string(output))
 	}
 
-	formatted_path := strings.Replace(dest_path, "/mnt/Survey", "S:/", 1)
+	formatted_path := strings.Replace(dest_path, "/mnt/Survey/", "S:/", 1)
+	formatted_path = strings.ReplaceAll(formatted_path, "/", "\\")
 	return formatted_path, nil
 }
 
