@@ -74,7 +74,8 @@ func create_folder(jsondata map[string]interface{}) (string, error) {
 		return "", fmt.Errorf("Error creating folder: %s Output: %s", err, string(output))
 	}
 
-	return string(output), nil
+	formatted_path := strings.Replace(dest_path, "/mnt/Survey", "S:/", 1)
+	return formatted_path, nil
 }
 
 func check_json(jsondata map[string]interface{}) string {
@@ -131,7 +132,7 @@ func post_to_server(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, fmt.Sprintf("Error creating folder: %s", err), http.StatusInternalServerError)
 			return
 		} else {
-			fmt.Fprintf(w, "Folder created successfully: %s", output)
+			fmt.Fprintf(w, "Folder created successfully. Path: %s", output)
 		}
 	}
 }
