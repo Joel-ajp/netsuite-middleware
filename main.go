@@ -63,7 +63,12 @@ func create_folder(jsondata map[string]interface{}) (string, error) {
 	}
 	project := jsondata["project"].(string)
 
-	dest_path := fmt.Sprintf("%s/%s/%s", ROOT_PATH, client, project)
+	var dest_path string
+	if client == "" {
+		dest_path = fmt.Sprintf("%s/%s", ROOT_PATH, project)
+	} else {
+		dest_path = fmt.Sprintf("%s/%s/%s", ROOT_PATH, client, project)
+	}
 	if err != nil {
 		return "", err
 	}
@@ -140,19 +145,9 @@ func post_to_server(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	port := ":8080"
-
-	http.HandleFunc("/get_test", func(w http.ResponseWriter, r *http.Request) {
-		out, err := exec.Command("ls", "-l").Output()
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Fprintf(w, "files: %s", out)
-	})
-
 	http.HandleFunc("/post", post_to_server)
 
 	log.Printf("Server started %s", port)
-
 	if err := http.ListenAndServe(port, nil); err != nil {
 		log.Fatal(err)
 	}
