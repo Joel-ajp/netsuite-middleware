@@ -29,6 +29,7 @@ func get_directories(path string) ([]string, error) {
 }
 
 func findBestMatch(clientName string, directories []string) string {
+	// split by :
 	clientName = strings.ToLower(clientName)
 	bestMatch := ""
 	minDistance := len(clientName) + 1
@@ -57,6 +58,8 @@ func get_client(client string, root string) (string, error) {
 func create_folder(jsondata map[string]interface{}) (string, error) {
 	ROOT_PATH := `/mnt/Survey/Projects`
 	TEMPLATE_PATH := `/mnt/Survey/Standards_Templates/8.0 DFS Directory Structure/FE Folder Structure/`
+	// add check for midstream, f&e, and upstream
+
 	client, err := get_client(jsondata["client"].(string), ROOT_PATH)
 	if err != nil {
 		return "", err
