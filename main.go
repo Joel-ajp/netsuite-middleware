@@ -29,7 +29,10 @@ func get_directories(path string) ([]string, error) {
 }
 
 func findBestMatch(clientName string, directories []string) string {
-	// split by :
+	if strings.Contains(clientName, ":") {
+		clientName = strings.Split(clientName, ":")[0]
+	}
+
 	clientName = strings.ToLower(clientName)
 	bestMatch := ""
 	minDistance := len(clientName) + 1
