@@ -28,7 +28,7 @@ func get_directories(path string) ([]string, error) {
 	return directories, nil
 }
 
-func findBestMatch(clientName string, directories []string) string {
+func find_best_match(clientName string, directories []string) string {
 	if strings.Contains(clientName, ":") {
 		clientName = strings.Split(clientName, ":")[0]
 	}
@@ -54,14 +54,19 @@ func get_client(client string, root string) (string, error) {
 		return "", err
 	}
 
-	bestMatch := findBestMatch(client, clients)
+	bestMatch := find_best_match(client, clients)
 	return bestMatch, nil
 }
 
 func create_folder(jsondata map[string]interface{}) (string, error) {
 	ROOT_PATH := `/mnt/Survey/Projects`
+	// FE_TEMPLATE_PATH := `/mnt/Survey/Standards_Templates/8.0 DFS Directory Structure/FE Folder Structure/`
+	// MIDSTREAM_TEMPLATE_PATH := ``
+	// UPSTREAM_TEMPLATE_PATH := ``
 	TEMPLATE_PATH := `/mnt/Survey/Standards_Templates/8.0 DFS Directory Structure/FE Folder Structure/`
-	// add check for midstream, f&e, and upstream
+	// Create a check of the "Project Department" field to determine which template to use
+	// JP, you have to check the form fields in prod before doing this to make sure they are the same
+	// This will be sending the data from the suite script
 
 	client, err := get_client(jsondata["client"].(string), ROOT_PATH)
 	if err != nil {
